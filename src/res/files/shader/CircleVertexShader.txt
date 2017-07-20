@@ -1,0 +1,10 @@
+#version 130
+#define TWOPI 6.283185307
+uniform mat4 projectionMatrix;
+uniform mat4 cameraMatrix;
+
+uniform float x, y, radius, total;
+
+void main() {
+    gl_Position = projectionMatrix * cameraMatrix * vec4(x + sin((gl_VertexID/total)*TWOPI)*radius * step(0.5, gl_VertexID*1.0), y + cos((gl_VertexID/total)*TWOPI)*radius * step(0.5, gl_VertexID*1.0), 0, 1);
+}
