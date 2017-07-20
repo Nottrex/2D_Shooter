@@ -44,6 +44,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glClearColor(0f, 1f, 1f, 1f);
 
+		gl.glEnable(gl.GL_MULTISAMPLE);
+
 		circleShader = new CircleShader(gl);
 		circleShader.start(gl);
 		circleShader.stop(gl);
@@ -92,10 +94,12 @@ public class GameView extends GLJPanel implements GLEventListener {
 		List<Player> playerList = game.getPlayers();
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
-			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), 25);
+			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), 256);
 
-			gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 25+2);
+			gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 		}
+		circleShader.setBounds(gl, 0, 0, 0.05f, 256);
+		gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 
 		circleShader.stop(gl);
 

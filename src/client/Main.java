@@ -12,6 +12,8 @@ public class Main {
 
 		GLProfile glprofile = GLProfile.getDefault();
 		GLCapabilities glcapabilities = new GLCapabilities(glprofile);
+		glcapabilities.setSampleBuffers(true);
+		glcapabilities.setNumSamples(8);
 		GameView gameView = new GameView(glcapabilities, game);
 
 		window.setContentPane(gameView);
