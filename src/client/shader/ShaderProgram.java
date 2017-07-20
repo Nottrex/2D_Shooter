@@ -1,4 +1,4 @@
-package client;
+package client.shader;
 
 import client.util.FileHandler;
 import com.jogamp.opengl.GL2;

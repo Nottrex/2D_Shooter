@@ -65,4 +65,8 @@ public class Player {
 	public float invertVelocity(float velocity) {
 		return velocity;
 	}
+
+	public float getRadius() {
+		return 0.1f;
+	}
 }

@@ -1,15 +1,20 @@
 package client;
 
+import client.shader.CircleShader;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.math.VectorUtil;
 import com.jogamp.opengl.util.FPSAnimator;
 import game.Game;
+import game.Player;
+
+import java.util.List;
 
 public class GameView extends GLJPanel implements GLEventListener {
 	public FPSAnimator animator;
 
+	private CircleShader circleShader;
 	private Camera cam;
 	private Game game;
 
@@ -39,6 +44,10 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glClearColor(0f, 1f, 1f, 1f);
 
+		circleShader = new CircleShader(gl);
+		circleShader.start(gl);
+		circleShader.stop(gl);
+
 		animator = new FPSAnimator(this, 60);
 		animator.setUpdateFPSFrames(60, null);
 		animator.start();
@@ -55,12 +64,18 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 		projectionMatrix = FloatUtil.makePerspective(new float[16], 0, true, (float) Math.toRadians(fov), aspect, near, far);
 
+		circleShader.start(gl);
+		circleShader.setProjectionMatrix(gl, projectionMatrix);
+		circleShader.stop(gl);
+
 		gl.glViewport(x, y, width, height);
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable glAutoDrawable) {
+		GL2 gl = glAutoDrawable.getGL().getGL2();
 
+		circleShader.cleanUp(gl);
 	}
 
 	@Override
@@ -68,7 +83,21 @@ public class GameView extends GLJPanel implements GLEventListener {
 		GL2 gl = glAutoDrawable.getGL().getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
+		Player p = game.getPlayers().get(0);
+		cam.setPosition(p.getX(), p.getY());
 		updateCamera(gl, cam);
+
+		circleShader.start(gl);
+
+		List<Player> playerList = game.getPlayers();
+		for (int i = 0; i < playerList.size(); i++) {
+			Player pl = playerList.get(i);
+			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), 25);
+
+			gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 25+2);
+		}
+
+		circleShader.stop(gl);
 
 		gl.glFlush();
 	}
@@ -91,6 +120,9 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 			viewMatrix = FloatUtil.makeLookAt(new float[16], 0, cameraPosition, 0, target, 0, up, 0, new float[16]);
 
+			circleShader.start(gl);
+			circleShader.setCamera(gl, viewMatrix);
+			circleShader.stop(gl);
 		}
 	}
 
