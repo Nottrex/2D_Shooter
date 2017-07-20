@@ -5,26 +5,29 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.math.VectorUtil;
 import com.jogamp.opengl.util.FPSAnimator;
+import game.Game;
 
 public class GameView extends GLJPanel implements GLEventListener {
 	public FPSAnimator animator;
 
 	private Camera cam;
+	private Game game;
 
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
 	private float[] cameraPosition = null;
 
-	public GameView(GLCapabilities capabilities, Camera cam) {
+	public GameView(GLCapabilities capabilities, Camera cam, Game game) {
 		super(capabilities);
 		this.cam = cam;
+		this.game = game;
 
 		setFocusable(true);
 		this.addGLEventListener(this);
 	}
 
-	public GameView(GLCapabilities capabilities) {
-		this(capabilities, new Camera());
+	public GameView(GLCapabilities capabilities, Game game) {
+		this(capabilities, new Camera(), game);
 	}
 
 	@Override
@@ -34,6 +37,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 		gl.setSwapInterval(1);
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glClearColor(0f, 1f, 1f, 1f);
 
 		animator = new FPSAnimator(this, 60);
 		animator.setUpdateFPSFrames(60, null);
@@ -65,6 +69,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		updateCamera(gl, cam);
+
+		gl.glFlush();
 	}
 
 	private void updateCamera(GL2 gl, Camera cam) {
