@@ -1,5 +1,6 @@
 package client;
 
+import client.util.FileHandler;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES2;
 

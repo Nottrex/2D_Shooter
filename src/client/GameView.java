@@ -23,6 +23,10 @@ public class GameView extends GLJPanel implements GLEventListener {
 		this.addGLEventListener(this);
 	}
 
+	public GameView(GLCapabilities capabilities) {
+		this(capabilities, new Camera());
+	}
+
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
 		GL2 gl = glAutoDrawable.getGL().getGL2();
