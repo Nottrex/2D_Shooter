@@ -1,0 +1,30 @@
+#version 130
+#define TWOPI 6.283185307
+uniform mat4 projectionMatrix;
+uniform mat4 cameraMatrix;
+
+uniform float x, y, radius, rotation, rotation2, length;
+
+void main() {
+    vec2 a1 = vec2(x + sin(rotation*TWOPI/360)*radius, y + cos(rotation*TWOPI/360)*radius);
+    vec2 a2 = vec2(x + sin(rotation2*TWOPI/360)*radius, y + cos(rotation2*TWOPI/360)*radius);
+
+    vec2 n = a2.yx-a1.yx;
+    n = normalize(n)*length;
+    vec2 a3 = a1 + n;
+    vec2 a4 = a2 + n;
+
+    vec2 a5 = vec2(1, 2);
+
+    if (gl_VertexID == 0) {
+        a5 = a1;
+    } else if(gl_VertexID == 1) {
+        a5 = a2;
+    } else if(gl_VertexID == 2) {
+        a5 = a3;
+    }  else if(gl_VertexID == 3) {
+        a5 = a4;
+    }
+
+    gl_Position = projectionMatrix * cameraMatrix * vec4(a5 , 0, 1);
+}

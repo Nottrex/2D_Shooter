@@ -78,7 +78,7 @@ public class Player {
 	}
 
 	public float getRadius() {
-		return 0.01f;
+		return 0.05f;
 	}
 
 	public Color getColor() {

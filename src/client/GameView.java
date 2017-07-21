@@ -1,6 +1,7 @@
 package client;
 
 import client.shader.CircleShader;
+import client.shader.GunShader;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.math.FloatUtil;
@@ -20,9 +21,9 @@ public class GameView extends GLJPanel implements GLEventListener {
 	public FPSAnimator animator;
 
 	private CircleShader circleShader;
+	private GunShader gunShader;
 	private Camera cam;
 	private Game game;
-
 
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
@@ -60,13 +61,17 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 		gl.setSwapInterval(1);
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glClearColor(0f, 1f, 1f, 1f);
+		gl.glClearColor(0.6f, 0.6f, 0.6f, 1f);
 
 		gl.glEnable(gl.GL_MULTISAMPLE);
 
 		circleShader = new CircleShader(gl);
 		circleShader.start(gl);
 		circleShader.stop(gl);
+
+		gunShader = new GunShader(gl);
+		gunShader.start(gl);
+		gunShader.stop(gl);
 
 		animator = new FPSAnimator(this, 60);
 		animator.setUpdateFPSFrames(60, null);
@@ -88,6 +93,10 @@ public class GameView extends GLJPanel implements GLEventListener {
 		circleShader.setProjectionMatrix(gl, projectionMatrix);
 		circleShader.stop(gl);
 
+		gunShader.start(gl);
+		gunShader.setProjectionMatrix(gl, projectionMatrix);
+		gunShader.stop(gl);
+
 		gl.glViewport(x, y, width, height);
 	}
 
@@ -107,9 +116,18 @@ public class GameView extends GLJPanel implements GLEventListener {
 		cam.setPosition(p.getX(), p.getY());
 		updateCamera(gl, cam);
 
-		circleShader.start(gl);
-
 		List<Player> playerList = game.getPlayers();
+
+		gunShader.start(gl);
+		for (int i = 0; i < playerList.size(); i++) {
+			Player pl = playerList.get(i);
+			gunShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius()/1.5f, pl.getColor().brighter().brighter(), pl.getRadius(), -30, 30);
+			gl.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
+		}
+		gunShader.stop(gl);
+
+
+		circleShader.start(gl);
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
 			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), pl.getColor(), 256);
@@ -119,6 +137,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 
 		circleShader.stop(gl);
+
 
 		gl.glFlush();
 	}
@@ -144,6 +163,10 @@ public class GameView extends GLJPanel implements GLEventListener {
 			circleShader.start(gl);
 			circleShader.setCamera(gl, viewMatrix);
 			circleShader.stop(gl);
+
+			gunShader.start(gl);
+			gunShader.setCamera(gl, viewMatrix);
+			gunShader.stop(gl);
 		}
 	}
 
