@@ -121,7 +121,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gunShader.start(gl);
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
-			gunShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius()/1.5f, pl.getColor().brighter().brighter(), pl.getRadius(), -30, 30);
+			gunShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius()/1.5f, pl.getColor().brighter().brighter(), pl.getRadius(), 123-30, 123+30);
 			gl.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
 		}
 		gunShader.stop(gl);

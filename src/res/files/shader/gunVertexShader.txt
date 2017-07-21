@@ -9,7 +9,7 @@ void main() {
     vec2 a1 = vec2(x + sin(rotation*TWOPI/360)*radius, y + cos(rotation*TWOPI/360)*radius);
     vec2 a2 = vec2(x + sin(rotation2*TWOPI/360)*radius, y + cos(rotation2*TWOPI/360)*radius);
 
-    vec2 n = a2.yx-a1.yx;
+    vec2 n = vec2(a1.y-a2.y, a2.x-a1.x);
     n = normalize(n)*length;
     vec2 a3 = a1 + n;
     vec2 a4 = a2 + n;
