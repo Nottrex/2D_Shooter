@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Game {
+
+	private GameMap map;
 	private List<Player> players;
 	private boolean running;
 
@@ -31,6 +33,7 @@ public class Game {
 	}
 
 	private void init() {
+		map = new GameMap(50, 50);
 		players = new ArrayList<>();
 		players.add(new Player());
 		running = true;
@@ -61,6 +64,10 @@ public class Game {
 
 	private void cleanUp() {
 
+	}
+
+	public GameMap getMap() {
+		return map;
 	}
 
 	public List<Player> getPlayers() {
