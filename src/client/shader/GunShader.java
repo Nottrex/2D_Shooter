@@ -30,13 +30,13 @@ public class GunShader extends ShaderProgram {
 		colorLocation = getUniformLocation(gl, "color");
 	}
 
-	public void setBounds(GL2 gl, float x, float y, float radius, Color c, float length, float rotation, float rotation2) {
+	public void setBounds(GL2 gl, float x, float y, float radius, Color c, float length, float rotation) {
 		setUniform1f(gl, xLocation, x);
 		setUniform1f(gl, yLocation, y);
 		setUniform1f(gl, radiusLocation, radius);
 		setUniform1f(gl, lengthLocation, length);
-		setUniform1f(gl, rotationLocation, rotation);
-		setUniform1f(gl, rotation2Location, rotation2);
+		setUniform1f(gl, rotationLocation, rotation-30);
+		setUniform1f(gl, rotation2Location, rotation+30);
 		setUniform4f(gl, colorLocation, c.getRed()/255.0f, c.getGreen()/255.0f, c.getBlue()/255.0f, c.getAlpha()/255.0f);
 	}
 

@@ -7,7 +7,6 @@ import game.Game;
 public class Main {
 	public static void main(String[] args) {
 		Window window = new Window();
-
 		Game game = new Game();
 
 		GLProfile glprofile = GLProfile.getDefault();

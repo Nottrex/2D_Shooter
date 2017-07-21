@@ -13,9 +13,9 @@ import game.Player;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Map;
 
 public class GameView extends GLJPanel implements GLEventListener {
 	public FPSAnimator animator;
@@ -28,6 +28,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
 	private float[] cameraPosition = null;
+
+	private int mouseX, mouseY;
 
 	public GameView(GLCapabilities capabilities, Camera cam, Game game) {
 		super(capabilities);
@@ -46,6 +48,20 @@ public class GameView extends GLJPanel implements GLEventListener {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				game.pressed.put(e.getKeyCode(), false);
+			}
+		});
+
+		this.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
 			}
 		});
 	}
@@ -121,7 +137,16 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gunShader.start(gl);
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
-			gunShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius()/1.5f, pl.getColor().brighter().brighter(), pl.getRadius(), 123-30, 123+30);
+
+			float[] mouse = screenPositionToWorldPosition(mouseX, mouseY);
+
+			float dx = pl.getX() - mouse[0];
+			float dy = pl.getY() - mouse[1];
+
+			float rot = 180.0f + (float) Math.toDegrees(Math.acos(dy/(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)))));
+			if(dx < 0) rot = 360 - rot;
+
+			gunShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius()/1.5f, pl.getColor().brighter().brighter(), pl.getRadius(), rot);
 			gl.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
 		}
 		gunShader.stop(gl);
