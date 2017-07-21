@@ -9,6 +9,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import game.Game;
 import game.Player;
 
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -111,10 +112,10 @@ public class GameView extends GLJPanel implements GLEventListener {
 		List<Player> playerList = game.getPlayers();
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
-			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), 256);
+			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), pl.getColor(), 256);
 			gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 		}
-		circleShader.setBounds(gl, 0, 0, 0.05f, 256);
+		circleShader.setBounds(gl, 0, 0, 0.05f, Color.RED, 256);
 		gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 
 		circleShader.stop(gl);

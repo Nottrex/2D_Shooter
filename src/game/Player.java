@@ -1,5 +1,8 @@
 package game;
 
+import java.awt.*;
+import java.util.Random;
+
 public class Player {
 	public static final float acceleration = 0.001f;
 	public static final float reibung = 0.9f;
@@ -10,11 +13,19 @@ public class Player {
 	private float vx, vy;
 	private float mx, my;
 
+	private Color c;
+
 	public Player() {
+		this(new Color(new Random().nextInt()));
+	}
+
+	public Player(Color indicator) {
 		x = 0;
 		y = 0;
 		vx = 0;
 		vy = 0;
+
+		c = indicator;
 	}
 
 	long lastTime = 0;
@@ -68,5 +79,9 @@ public class Player {
 
 	public float getRadius() {
 		return 0.01f;
+	}
+
+	public Color getColor() {
+		return c;
 	}
 }
