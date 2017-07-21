@@ -22,7 +22,6 @@ public class GameView extends GLJPanel implements GLEventListener {
 	private Camera cam;
 	private Game game;
 
-	private Map<Integer, Boolean> pressedKeys;
 
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
@@ -32,7 +31,6 @@ public class GameView extends GLJPanel implements GLEventListener {
 		super(capabilities);
 		this.cam = cam;
 		this.game = game;
-		this.pressedKeys = new HashMap<>();
 
 		setFocusable(true);
 		this.addGLEventListener(this);
@@ -40,12 +38,12 @@ public class GameView extends GLJPanel implements GLEventListener {
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				pressedKeys.put(e.getKeyCode(), true);
+				game.pressed.put(e.getKeyCode(), true);
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				pressedKeys.put(e.getKeyCode(), false);
+				game.pressed.put(e.getKeyCode(), false);
 			}
 		});
 	}

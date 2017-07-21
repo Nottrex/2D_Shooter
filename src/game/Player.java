@@ -1,7 +1,7 @@
 package game;
 
 public class Player {
-	public static final float acceleration = 0.05f;
+	public static final float acceleration = 0.001f;
 	public static final float reibung = 0.9f;
 	public static final float stopping = 0.9f;
 	public static final long TIME = 10;
@@ -67,6 +67,6 @@ public class Player {
 	}
 
 	public float getRadius() {
-		return 0.1f;
+		return 0.01f;
 	}
 }
