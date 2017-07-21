@@ -9,7 +9,11 @@ import com.jogamp.opengl.util.FPSAnimator;
 import game.Game;
 import game.Player;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameView extends GLJPanel implements GLEventListener {
 	public FPSAnimator animator;
@@ -17,6 +21,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 	private CircleShader circleShader;
 	private Camera cam;
 	private Game game;
+
+	private Map<Integer, Boolean> pressedKeys;
 
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
@@ -26,9 +32,22 @@ public class GameView extends GLJPanel implements GLEventListener {
 		super(capabilities);
 		this.cam = cam;
 		this.game = game;
+		this.pressedKeys = new HashMap<>();
 
 		setFocusable(true);
 		this.addGLEventListener(this);
+
+		this.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				pressedKeys.put(e.getKeyCode(), true);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				pressedKeys.put(e.getKeyCode(), false);
+			}
+		});
 	}
 
 	public GameView(GLCapabilities capabilities, Game game) {
@@ -95,7 +114,6 @@ public class GameView extends GLJPanel implements GLEventListener {
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
 			circleShader.setBounds(gl, pl.getX(), pl.getY(), pl.getRadius(), 256);
-
 			gl.glDrawArrays(GL.GL_TRIANGLE_FAN, 0, 256 + 2);
 		}
 		circleShader.setBounds(gl, 0, 0, 0.05f, 256);

@@ -28,7 +28,6 @@ public class Game {
 		players = new ArrayList<>();
 		players.add(new Player());
 		running = true;
-
 	}
 
 	private void update(long time) {
