@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Window extends JFrame {
 
@@ -8,6 +9,7 @@ public class Window extends JFrame {
 	public Window() {
 		super("2D Shooter!");
 
+		setMinimumSize(new Dimension(800, 600));
 		setSize(800, 600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(true);

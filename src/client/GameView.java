@@ -18,6 +18,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class GameView extends GLJPanel implements GLEventListener {
+
+	public static final float MAX_OFFSET = 0.2f;
+
 	public FPSAnimator animator;
 
 	private CircleShader circleShader;
@@ -28,6 +31,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 	private float[] projectionMatrix;
 	private float[] viewMatrix = null;
 	private float[] cameraPosition = null;
+	private float[] cameraOffset = null;
 
 	private int mouseX, mouseY;
 
@@ -72,6 +76,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
+		cameraOffset = new float[2];
 		GL2 gl = glAutoDrawable.getGL().getGL2();
 		glAutoDrawable.setGL((new DebugGL2(gl)));
 
@@ -129,7 +134,18 @@ public class GameView extends GLJPanel implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		Player p = game.getPlayers().get(0);
-		cam.setPosition(p.getX(), p.getY());
+
+		float[] mouse = screenPositionToWorldPosition(mouseX, mouseY);
+		float dx = p.getX() - mouse[0] + cameraOffset[0];
+		float dy = p.getY() - mouse[1] + cameraOffset[1];
+
+		dx/=5.0f;
+		dy/=5.0f;
+
+		cameraOffset[0] = dx <= MAX_OFFSET? dx >= -MAX_OFFSET? dx: -MAX_OFFSET: MAX_OFFSET;
+		cameraOffset[1] = dy <= MAX_OFFSET? dy >= -MAX_OFFSET? dy: -MAX_OFFSET: MAX_OFFSET;
+
+		cam.setPosition(p.getX() - cameraOffset[0], p.getY() - cameraOffset[1]);
 		updateCamera(gl, cam);
 
 		List<Player> playerList = game.getPlayers();
@@ -138,10 +154,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 		for (int i = 0; i < playerList.size(); i++) {
 			Player pl = playerList.get(i);
 
-			float[] mouse = screenPositionToWorldPosition(mouseX, mouseY);
-
-			float dx = pl.getX() - mouse[0];
-			float dy = pl.getY() - mouse[1];
+			dx = pl.getX() - mouse[0];
+			dy = pl.getY() - mouse[1];
 
 			float rot = 180.0f + (float) Math.toDegrees(Math.acos(dy/(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)))));
 			if(dx < 0) rot = 360 - rot;
