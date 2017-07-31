@@ -1,5 +1,7 @@
 package client;
 
+import client.audio.AudioHandler;
+import client.audio.AudioPlayer;
 import client.shader.CircleShader;
 import client.shader.GunShader;
 import com.jogamp.opengl.*;
@@ -23,6 +25,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 	public FPSAnimator animator;
 
+	private AudioPlayer aPlayer;
+
 	private CircleShader circleShader;
 	private GunShader gunShader;
 	private Camera cam;
@@ -39,6 +43,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 		super(capabilities);
 		this.cam = cam;
 		this.game = game;
+		this.aPlayer = new AudioPlayer();
 
 		setFocusable(true);
 		this.addGLEventListener(this);
@@ -52,6 +57,13 @@ public class GameView extends GLJPanel implements GLEventListener {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				game.pressed.put(e.getKeyCode(), false);
+			}
+		});
+
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				aPlayer.playAudio("shoot");
 			}
 		});
 
@@ -76,6 +88,9 @@ public class GameView extends GLJPanel implements GLEventListener {
 
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
+		AudioHandler.loadMusicWav("hit", "hit");
+		AudioHandler.loadMusicWav("shoot", "shoot");
+
 		cameraOffset = new float[2];
 		GL2 gl = glAutoDrawable.getGL().getGL2();
 		glAutoDrawable.setGL((new DebugGL2(gl)));
