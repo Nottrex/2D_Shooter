@@ -1,36 +1,36 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameMap {
+	private List<Wall> walls;
+	private List<Shape> shapes;
+	private boolean shapeChange;
 
-	private int[][] map;
-
-	public GameMap(int width, int height) {
-		map = new int[width][height];
-
-		for(int i = 0; i < width; i++) {
-			map[i][0] = 1;
-			map[i][height-1] = 1;
-		}
-
-		for(int i = 0; i < height; i++) {
-			map[0][i] = 1;
-			map[width-1][i] = 1;
-		}
+	public GameMap() {
+		shapes = new ArrayList<>();
+		walls = new ArrayList<>();
+		shapeChange = true;
 	}
 
-	public int getWidth() {
-		return getWidth();
+	public void addShape(Shape s) {
+		shapes.add(s);
+		walls.addAll(s.getWalls());
+		shapeChange = true;
 	}
 
-	public int getHeight() {
-		return getHeight();
+	public List<Shape> getShapes() {
+		return shapes;
 	}
 
-	public boolean isSolid(int x, int y) {
-		return map[x][y] == 1;
+	public List<Wall> getWalls() {
+		return walls;
 	}
 
-	public int getTile(int x, int y) {
-		return map[x][y];
+	public boolean hasShapeChange() {
+		boolean b = shapeChange;
+		shapeChange = false;
+		return b;
 	}
 }

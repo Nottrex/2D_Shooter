@@ -5,5 +5,5 @@ public class AudioConstants {
 	public static final float MAX_VOLUME = 6.0f;
 
 	public static float MUSIC_VOLUME = 0.0f;
-	public static float EFFECT_VOLUME = 0.0f;
+	public static float EFFECT_VOLUME = -40.0f;
 }
