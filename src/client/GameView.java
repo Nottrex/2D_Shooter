@@ -51,6 +51,7 @@ public class GameView extends GLJPanel implements GLEventListener {
 	public GameView(GLCapabilities capabilities, Camera cam, Game game) {
 		super(capabilities);
 		this.cam = cam;
+		cam.setDelayFrameAmount(10);
 		this.game = game;
 		this.aPlayer = new AudioPlayer();
 
@@ -104,11 +105,11 @@ public class GameView extends GLJPanel implements GLEventListener {
 		GL2 gl = glAutoDrawable.getGL().getGL2();
 		glAutoDrawable.setGL((new DebugGL2(gl)));
 
-		gl.setSwapInterval(2);
+		gl.setSwapInterval(1);
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glClearColor(0.6f, 0.6f, 0.6f, 1f);
 
-		gl.glEnable(gl.GL_MULTISAMPLE);
+		gl.glEnable(GL.GL_MULTISAMPLE);
 
 		circleShader = new CircleShader(gl);
 		circleShader.start(gl);

@@ -48,11 +48,22 @@ public class Camera {
 	private float a4, b4, c4, d4;
 	private boolean z3 = false;
 
+	private int delayFrameAmount;
+	private float[][] delayFrames;
+
 	public Camera() {
-		zoom = 3;
+		zoom = 1;
 		x = 0;
 		y = 0;
 		tilt = 0;
+		delayFrameAmount = 0;
+		delayFrames = new float[delayFrameAmount][4];
+		for (int t = 0; t < delayFrameAmount; t++) {
+			delayFrames[t][0] = zoom;
+			delayFrames[t][1] = x;
+			delayFrames[t][2] = y;
+			delayFrames[t][3] = tilt;
+		}
 		tzoom = zoom;
 		tx = x;
 		ty = y;
@@ -65,7 +76,7 @@ public class Camera {
 	 * Takes t-Values and put it to the inUse values
 	 */
 	public boolean update() {
-		boolean b5 = (zoom != tzoom) || (x != tx) || (y != ty) || z || z2 || z3 || (tilt != ttilt) || !screenshakeList.isEmpty();
+		boolean b5 = (delayFrameAmount != 0) || (zoom != tzoom) || (x != tx) || (y != ty) || z || z2 || z3 || (tilt != ttilt) || !screenshakeList.isEmpty();
 		long time = System.currentTimeMillis() % 10000000;
 
 		if (z) {
@@ -109,11 +120,29 @@ public class Camera {
 			}
 		}
 
+		if (delayFrameAmount != 0) {
+			zoom = delayFrames[0][0];
+			x = delayFrames[0][1] + sx / zoom;
+			y = delayFrames[0][2] + sy / zoom;
+			tilt = delayFrames[0][3];
 
-		zoom = tzoom;
-		x = tx + sx / zoom;
-		y = ty + sy / zoom;
-		tilt = ttilt;
+			for (int t = 0; t < delayFrameAmount-1; t++) {
+				delayFrames[t][0] = delayFrames[t+1][0];
+				delayFrames[t][1] = delayFrames[t+1][1];
+				delayFrames[t][2] = delayFrames[t+1][2];
+				delayFrames[t][3] = delayFrames[t+1][3];
+			}
+			delayFrames[delayFrameAmount-1][0] = tzoom;
+			delayFrames[delayFrameAmount-1][1] = tx;
+			delayFrames[delayFrameAmount-1][2] = ty;
+			delayFrames[delayFrameAmount-1][3] = ttilt;
+		} else {
+			zoom = tzoom;
+			x = tx + sx / zoom;
+			y = ty + sy / zoom;
+			tilt = ttilt;
+		}
+
 		return b5;
 	}
 
@@ -228,6 +257,17 @@ public class Camera {
 	public void setZoom(float tzoom) {
 		z = false;
 		this.tzoom = tzoom;
+	}
+
+	public void setDelayFrameAmount(int amount) {
+		delayFrameAmount = amount;
+		delayFrames = new float[delayFrameAmount][4];
+		for (int t = 0; t < delayFrameAmount; t++) {
+			delayFrames[t][0] = zoom;
+			delayFrames[t][1] = x;
+			delayFrames[t][2] = y;
+			delayFrames[t][3] = tilt;
+		}
 	}
 
 	public float getX() {
