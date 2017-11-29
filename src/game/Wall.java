@@ -1,8 +1,9 @@
 package game;
 
 public class Wall {
-	private float x1, y1, x2, y2;
-	private float nx, ny, wx, wy;
+	private float x1, y1, x2, y2;	//corners
+	private float nx, ny;			//normal vector
+	private float wx, wy;			//direction vector
 
 	public Wall(float x1, float y1, float x2, float y2) {
 		this.x1 = x1;

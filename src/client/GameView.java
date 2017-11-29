@@ -51,7 +51,8 @@ public class GameView extends GLJPanel implements GLEventListener {
 	public GameView(GLCapabilities capabilities, Camera cam, Game game) {
 		super(capabilities);
 		this.cam = cam;
-		cam.setDelayFrameAmount(10);
+		cam.setZoom(0.1f);
+
 		this.game = game;
 		this.aPlayer = new AudioPlayer();
 

@@ -27,6 +27,12 @@ public class Game {
 			update(curr - last);
 
 			last = curr;
+
+			try {
+				Thread.sleep(20);
+			} catch (Exception e) {
+
+			}
 		}
 		cleanUp();
 	}
@@ -38,10 +44,16 @@ public class Game {
 		map = new GameMap();
 
 		List<Location> triangleVertices = new ArrayList<>();
-		triangleVertices.add(new Location(-0.3f, -0.3f));
-		triangleVertices.add(new Location(0.3f, -0.3f));
-		triangleVertices.add(new Location(0f, -0.6f));
-		map.addShape(new Shape(triangleVertices, new Location(0, -0.45f)));
+		triangleVertices.add(new Location(-40f, -6f));
+		triangleVertices.add(new Location(40f, -6f));
+		triangleVertices.add(new Location(0f, -12f));
+		map.addShape(new Shape(triangleVertices, new Location(0, -9f)));
+
+		List<Location> triangleVertices2 = new ArrayList<>();
+		triangleVertices2.add(new Location(40f, -6f));
+		triangleVertices2.add(new Location(40f, 40f));
+		triangleVertices2.add(new Location(50f, 17f));
+		map.addShape(new Shape(triangleVertices2, new Location(42f, 17f)));
 
 		running = true;
 	}
@@ -50,6 +62,7 @@ public class Game {
 		return pressed.containsKey(i) ? pressed.get(i) : false;
 	}
 
+	boolean isSpacePressed = false;
 	private void update(long time) {
 		float mx = 0, my = 0;
 		if (isPressed(KeyEvent.VK_D)) mx += 1;
@@ -66,6 +79,9 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 			players.get(i).update(time, map.getWalls());
 		}
+
+		if (!isSpacePressed && isPressed(KeyEvent.VK_SPACE)) players.get(0).jump();
+		isSpacePressed = isPressed(KeyEvent.VK_SPACE);
 	}
 
 	private void cleanUp() {
